@@ -4,6 +4,7 @@ import com.product.dto.CategoryDto;
 import com.product.entity.Category;
 import com.product.mapper.CategoryMapper;
 import com.product.repository.CategoryRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,8 +14,11 @@ public class CategoryServiceImpl implements  CategoryService{
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository
+                              ) {
         this.categoryRepository = categoryRepository;
+
     }
 
     @Override
@@ -46,11 +50,15 @@ public class CategoryServiceImpl implements  CategoryService{
 
     @Override
     public CategoryDto findByCategoryId(Long id) {
-        return null;
+        return categoryRepository.findById(id)
+                .map(CategoryMapper::convertCategoryDto)
+                .orElse(null);
     }
 
     @Override
     public CategoryDto findByCategoryName(String name) {
-        return null;
+        return categoryRepository.findByNameIgnoreCase(name)
+                .map(CategoryMapper::convertCategoryDto)
+                .orElse(null);
     }
 }

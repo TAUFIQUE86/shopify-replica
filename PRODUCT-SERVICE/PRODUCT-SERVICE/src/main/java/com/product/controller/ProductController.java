@@ -5,9 +5,7 @@ import com.product.dto.CategoryDto;
 import com.product.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,16 +42,16 @@ public class ProductController {
         return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 
+  // http://localhost:8081/api/v1/product/name/categories?name=Electronics
+    @GetMapping("/{id}/categories")
+    public  ResponseEntity<ApiResponse<CategoryDto>> getCategoriesById(@PathVariable  Long id){
 
-    @GetMapping("/id/categories")
-    public  ResponseEntity<ApiResponse<CategoryDto>> getCategoriesById(){
-
-        CategoryDto byCategoryId = categoryService.findByCategoryId(1l);
+        CategoryDto byCategoryId = categoryService.findByCategoryId(id);
         ApiResponse<CategoryDto> response = new ApiResponse<>();
 
         if (byCategoryId !=null ){
             response.setMessage("Fatched by id");
-            response.setStatus(200);
+            response.setStatus(HttpStatus.OK.value());
             response.setData(byCategoryId);
             return  new ResponseEntity<>(response,HttpStatus.OK);
 
@@ -69,15 +67,15 @@ public class ProductController {
     }
 
     @GetMapping("/name/categories")
-    public ResponseEntity<ApiResponse<CategoryDto>> getCategoriesByName(){
+    public ResponseEntity<ApiResponse<CategoryDto>> getCategoriesByName(@RequestParam String name){
 
-        CategoryDto byCategoriesName = categoryService.findByCategoryName("Alice");
+        CategoryDto byCategoriesName = categoryService.findByCategoryName(name);
 
         ApiResponse<CategoryDto> response = new ApiResponse<>();
 
         if (byCategoriesName !=null){
             response.setMessage("Found by name here ");
-            response.setStatus(200);
+            response.setStatus(HttpStatus.OK.value());
             response.setData(byCategoriesName);
             return  new ResponseEntity<>(response,HttpStatus.OK);
 
