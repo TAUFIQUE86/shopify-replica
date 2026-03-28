@@ -19,6 +19,10 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
+
+
+//    http://localhost:8081/api/v1/product/list/categories
+
     @GetMapping("/list/categories")
     public ResponseEntity<ApiResponse<List<CategoryDto>>> getCategories(){
 
@@ -41,8 +45,8 @@ public class ProductController {
 
         return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
+// http://localhost:8081/api/v1/product/1/categories
 
-  // http://localhost:8081/api/v1/product/name/categories?name=Electronics
     @GetMapping("/{id}/categories")
     public  ResponseEntity<ApiResponse<CategoryDto>> getCategoriesById(@PathVariable  Long id){
 
@@ -65,6 +69,9 @@ public class ProductController {
 
 
     }
+
+
+    // http://localhost:8081/api/v1/product/name/categories?name=Electronics
 
     @GetMapping("/name/categories")
     public ResponseEntity<ApiResponse<CategoryDto>> getCategoriesByName(@RequestParam String name){
