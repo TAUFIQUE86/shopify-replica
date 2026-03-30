@@ -2,7 +2,9 @@ package com.product.controller;
 
 import com.product.dto.ApiResponse;
 import com.product.dto.CategoryDto;
+import com.product.dto.ProductDto;
 import com.product.service.CategoryService;
+import com.product.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +16,11 @@ import java.util.List;
 public class ProductController {
 
     private CategoryService categoryService;
+    private ProductService productService;
 
-    public ProductController(CategoryService categoryService) {
+    public ProductController(CategoryService categoryService, ProductService productService) {
         this.categoryService = categoryService;
+        this.productService = productService;
     }
 
 
@@ -45,6 +49,8 @@ public class ProductController {
 
         return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
+
+// my practise
 // http://localhost:8081/api/v1/product/1/categories
 
     @GetMapping("/{id}/categories")
@@ -70,7 +76,7 @@ public class ProductController {
 
     }
 
-
+// my practise
     // http://localhost:8081/api/v1/product/name/categories?name=Electronics
 
     @GetMapping("/name/categories")
@@ -93,6 +99,40 @@ public class ProductController {
         response.setStatus(400);
         response.setData(byCategoriesName);
         return  new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+
+    }
+
+
+
+
+
+
+
+    // http://localhost:8081/api/v1/product/list/search
+
+    @GetMapping("/list/search")
+    public  ResponseEntity<ApiResponse<List<ProductDto>>> searchProduct(
+           @RequestParam String keyword){
+
+
+        List<ProductDto> productDtoList = productService.searchProduct(keyword);
+        ApiResponse<List<ProductDto>> response = new ApiResponse<>();
+
+        if (productDtoList != null && !productDtoList.isEmpty()){
+
+            response.setMessage("Data fatched ");
+            response.setData(productDtoList);
+            response.setStatus(HttpStatus.OK.value());
+            return  new ResponseEntity<>(response,HttpStatus.OK);
+
+        }
+
+        response.setMessage("Data  Not fatched ");
+        response.setData(null);
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+
+        return  new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+
 
     }
 }
