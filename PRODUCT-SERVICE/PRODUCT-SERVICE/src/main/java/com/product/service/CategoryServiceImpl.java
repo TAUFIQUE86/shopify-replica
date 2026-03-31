@@ -47,7 +47,7 @@ public class CategoryServiceImpl implements  CategoryService{
             .collect(Collectors.toList());
      */
 
-
+/*
     @Override
     public CategoryDto findByCategoryId(Long id) {
         return categoryRepository.findById(id)
@@ -63,4 +63,6 @@ public class CategoryServiceImpl implements  CategoryService{
     }
 
 
+
+ */
 }

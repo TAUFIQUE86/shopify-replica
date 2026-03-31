@@ -1,5 +1,6 @@
 package com.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class Category {
     private  String name;
 
 // Sub-Category mapping
+    @JsonManagedReference
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SubCategory> subCategories = new LinkedHashSet<>();
 

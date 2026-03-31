@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,7 +23,9 @@ public class ProductServiceImpl implements  ProductService {
     @Override
     public List<ProductDto> searchProduct(String keyword) {
 
+
         List<Product> products = productRepository.searchProducts(keyword);
+
         ArrayList<ProductDto> productDtos = new ArrayList<>();
 
        for (Product p:products){

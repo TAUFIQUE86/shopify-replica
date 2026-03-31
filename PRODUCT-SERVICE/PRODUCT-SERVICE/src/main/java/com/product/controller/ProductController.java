@@ -15,8 +15,8 @@ import java.util.List;
 @RequestMapping("api/v1/product")
 public class ProductController {
 
-    private CategoryService categoryService;
-    private ProductService productService;
+    private final CategoryService categoryService;
+    private final ProductService productService;
 
     public ProductController(CategoryService categoryService, ProductService productService) {
         this.categoryService = categoryService;
@@ -48,8 +48,10 @@ public class ProductController {
 
 
         return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+
     }
 
+    /*
 // my practise
 // http://localhost:8081/api/v1/product/1/categories
 
@@ -70,7 +72,7 @@ public class ProductController {
         }
         response.setMessage(" not Fatched by id");
         response.setStatus(400);
-        response.setData(byCategoryId);
+        response.setData(null);
         return  new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
 
 
@@ -97,13 +99,15 @@ public class ProductController {
         }
         response.setMessage(" not Found by name here ");
         response.setStatus(400);
-        response.setData(byCategoriesName);
+        response.setData(null);
         return  new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
 
     }
 
 
 
+
+     */
 
 
 
