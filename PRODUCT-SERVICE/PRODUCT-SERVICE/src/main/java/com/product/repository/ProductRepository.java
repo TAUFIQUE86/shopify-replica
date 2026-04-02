@@ -28,6 +28,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
  */
 
+
+
     @Query("""
     SELECT DISTINCT p FROM Product p
     LEFT JOIN p.brands b
@@ -36,5 +38,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
        OR LOWER(b.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
 """)
     List<Product> searchProducts(@Param("keyword") String keyword);
+
+
+
+
 
 }

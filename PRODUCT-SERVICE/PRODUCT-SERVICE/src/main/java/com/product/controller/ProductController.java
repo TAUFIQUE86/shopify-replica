@@ -61,7 +61,7 @@ public class ProductController {
         CategoryDto byCategoryId = categoryService.findByCategoryId(id);
         ApiResponse<CategoryDto> response = new ApiResponse<>();
 
-        if (byCategoryId !=null ){
+        if (byCategoryId !=null){
             response.setMessage("Fatched by id");
             response.setStatus(HttpStatus.OK.value());
             response.setData(byCategoryId);
@@ -111,8 +111,7 @@ public class ProductController {
 
 
 
-
-    // http://localhost:8081/api/v1/product/list/search
+    // http://localhost:8081/api/v1/product/list/search?keyword=apple
 
     @GetMapping("/list/search")
     public  ResponseEntity<ApiResponse<List<ProductDto>>> searchProduct(
