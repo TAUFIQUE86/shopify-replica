@@ -38,31 +38,15 @@ public class CategoryServiceImpl implements  CategoryService{
         return  dtoList;
     }
 
-    /*
-
-
-    return categoryRepository.findAll()
-            .stream()
-            .map(CategoryMapper::convertCategoryDto)
-            .collect(Collectors.toList());
-     */
-
-/*
     @Override
     public CategoryDto findByCategoryId(Long id) {
-        return categoryRepository.findById(id)
-                .map(CategoryMapper::convertCategoryDto)
-                .orElse(null);
+        return null;
     }
 
     @Override
     public CategoryDto findByCategoryName(String name) {
-        return categoryRepository.findByNameIgnoreCase(name)
-                .map(CategoryMapper::convertCategoryDto)
-                .orElse(null);
+        return null;
     }
 
 
-
- */
 }

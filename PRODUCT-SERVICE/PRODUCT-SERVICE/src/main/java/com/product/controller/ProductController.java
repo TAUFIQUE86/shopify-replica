@@ -5,11 +5,15 @@ import com.product.dto.CategoryDto;
 import com.product.dto.ProductDto;
 import com.product.service.CategoryService;
 import com.product.service.ProductService;
+import com.product.service.S3Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/product")
@@ -17,10 +21,12 @@ public class ProductController {
 
     private final CategoryService categoryService;
     private final ProductService productService;
+    private  final S3Service s3Service;
 
-    public ProductController(CategoryService categoryService, ProductService productService) {
+    public ProductController(CategoryService categoryService, ProductService productService, S3Service s3Service) {
         this.categoryService = categoryService;
         this.productService = productService;
+        this.s3Service = s3Service;
     }
 
 
@@ -51,63 +57,7 @@ public class ProductController {
 
     }
 
-    /*
-// my practise
-// http://localhost:8081/api/v1/product/1/categories
 
-    @GetMapping("/{id}/categories")
-    public  ResponseEntity<ApiResponse<CategoryDto>> getCategoriesById(@PathVariable  Long id){
-
-        CategoryDto byCategoryId = categoryService.findByCategoryId(id);
-        ApiResponse<CategoryDto> response = new ApiResponse<>();
-
-        if (byCategoryId !=null){
-            response.setMessage("Fatched by id");
-            response.setStatus(HttpStatus.OK.value());
-            response.setData(byCategoryId);
-            return  new ResponseEntity<>(response,HttpStatus.OK);
-
-
-
-        }
-        response.setMessage(" not Fatched by id");
-        response.setStatus(400);
-        response.setData(null);
-        return  new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
-
-
-    }
-
-// my practise
-    // http://localhost:8081/api/v1/product/name/categories?name=Electronics
-
-    @GetMapping("/name/categories")
-    public ResponseEntity<ApiResponse<CategoryDto>> getCategoriesByName(@RequestParam String name){
-
-        CategoryDto byCategoriesName = categoryService.findByCategoryName(name);
-
-        ApiResponse<CategoryDto> response = new ApiResponse<>();
-
-        if (byCategoriesName !=null){
-            response.setMessage("Found by name here ");
-            response.setStatus(HttpStatus.OK.value());
-            response.setData(byCategoriesName);
-            return  new ResponseEntity<>(response,HttpStatus.OK);
-
-
-
-        }
-        response.setMessage(" not Found by name here ");
-        response.setStatus(400);
-        response.setData(null);
-        return  new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
-
-    }
-
-
-
-
-     */
 
 
 
@@ -138,4 +88,20 @@ public class ProductController {
 
 
     }
+
+
+
+    // http://localhost:8081/api/v1/product/list/upload
+    @PostMapping("/list/upload")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+
+        String url = s3Service.uploadFile(file);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Image uploaded successfully",
+                "url", url
+        ));
+
+    }
+
 }
