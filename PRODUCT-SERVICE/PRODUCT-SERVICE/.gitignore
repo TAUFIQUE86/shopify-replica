@@ -31,5 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
-### my database and aws sensetive details ###
+###  database and aws ##
 application-local.properties
