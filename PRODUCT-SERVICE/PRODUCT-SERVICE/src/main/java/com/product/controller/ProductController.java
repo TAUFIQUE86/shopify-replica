@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class ProductController {
 
     private final CategoryService categoryService;
     private final ProductService productService;
-    private  final S3Service s3Service;
+    private final S3Service s3Service;
 
     public ProductController(CategoryService categoryService, ProductService productService, S3Service s3Service) {
         this.categoryService = categoryService;
@@ -30,22 +31,21 @@ public class ProductController {
     }
 
 
-
 //    http://localhost:8081/api/v1/product/list/categories
 
     @GetMapping("/list/categories")
-    public ResponseEntity<ApiResponse<List<CategoryDto>>> getCategories(){
+    public ResponseEntity<ApiResponse<List<CategoryDto>>> getCategories() {
 
         List<CategoryDto> categoriesDto = categoryService.findAll();
 
 
         ApiResponse<List<CategoryDto>> response = new ApiResponse<>();
 
-        if (categoriesDto != null && !categoriesDto.isEmpty()){
+        if (categoriesDto != null && !categoriesDto.isEmpty()) {
             response.setMessage("All categories data fatched");
             response.setStatus(200);
             response.setData(categoriesDto);
-            return new ResponseEntity<>(response,HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         }
         response.setMessage("categories data not fatched");
@@ -53,30 +53,27 @@ public class ProductController {
         response.setData(null);
 
 
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 
     }
-
-
-
 
 
     // http://localhost:8081/api/v1/product/list/search?keyword=apple
 
     @GetMapping("/list/search")
-    public  ResponseEntity<ApiResponse<List<ProductDto>>> searchProduct(
-           @RequestParam String keyword){
+    public ResponseEntity<ApiResponse<List<ProductDto>>> searchProduct(
+            @RequestParam String keyword) {
 
 
         List<ProductDto> productDtoList = productService.searchProduct(keyword);
         ApiResponse<List<ProductDto>> response = new ApiResponse<>();
 
-        if (productDtoList != null && !productDtoList.isEmpty()){
+        if (productDtoList != null && !productDtoList.isEmpty()) {
 
             response.setMessage("Data fatched ");
             response.setData(productDtoList);
             response.setStatus(HttpStatus.OK.value());
-            return  new ResponseEntity<>(response,HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         }
 
@@ -84,22 +81,30 @@ public class ProductController {
         response.setData(null);
         response.setStatus(HttpStatus.NOT_FOUND.value());
 
-        return  new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 
 
     }
 
 
-
     // http://localhost:8081/api/v1/product/list/upload
     @PostMapping("/list/upload")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile[] files) throws IOException {
+        ArrayList<String> imagePaths = new ArrayList<>();
 
-        String url = s3Service.uploadFile(file);
+        for (MultipartFile file : files) {
+
+
+            if (file == null || file.isEmpty()) continue;
+
+            String url = s3Service.uploadFile(file);
+            imagePaths.add(url);
+
+        }
 
         return ResponseEntity.ok(Map.of(
                 "message", "Image uploaded successfully",
-                "url", url
+                "urls", imagePaths
         ));
 
     }

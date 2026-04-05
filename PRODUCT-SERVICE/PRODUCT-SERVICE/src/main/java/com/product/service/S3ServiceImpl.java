@@ -54,7 +54,7 @@ public class S3ServiceImpl implements S3Service {
 
         return getFileUrl(fileName);
     }
-
+    // url return include
     private String getFileUrl(String fileName) {
         return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + fileName;
     }
