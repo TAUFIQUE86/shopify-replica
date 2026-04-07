@@ -1,5 +1,9 @@
 package com.product.service;
 
+import com.product.entity.Brand;
+import com.product.entity.Image;
+import com.product.repository.BrandRepository;
+import com.product.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,13 +24,17 @@ public class S3ServiceImpl implements S3Service {
     private String region;
 
     private final S3Client s3Client;
+    private final ImageRepository imageRepository;
+    private final BrandRepository brandRepository;
 
-    public S3ServiceImpl(S3Client s3Client) {
+    public S3ServiceImpl(S3Client s3Client, ImageRepository imageRepository, BrandRepository brandRepository) {
         this.s3Client = s3Client;
+        this.imageRepository = imageRepository;
+        this.brandRepository = brandRepository;
     }
 
     @Override
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file, long brandId) throws IOException {
 
         // ✅ validation
         if (file.isEmpty()) {
@@ -51,12 +59,19 @@ public class S3ServiceImpl implements S3Service {
                 request,
                 RequestBody.fromInputStream(file.getInputStream(), file.getSize())
         );
+        // this is the url of s3 uploaded photos
+        String url = "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + fileName;
 
-        return getFileUrl(fileName);
+        // save data inside image entity
+        // here we store url in databases to get product photos in ui
+        Brand brand = brandRepository.findById(brandId).get();
+        Image image = new Image();
+        image.setBrand(brand);
+        image.setUrl(url);
+
+        return url;
     }
-    // url return include
-    private String getFileUrl(String fileName) {
-        return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + fileName;
-    }
+
+
 }
 

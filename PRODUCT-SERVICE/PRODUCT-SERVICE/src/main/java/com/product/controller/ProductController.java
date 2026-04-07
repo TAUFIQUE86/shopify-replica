@@ -89,7 +89,11 @@ public class ProductController {
 
     // http://localhost:8081/api/v1/product/list/upload
     @PostMapping("/list/upload")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile[] files) throws IOException {
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile[] files,
+
+                                         @RequestParam("userId") long brandId
+
+    ) throws IOException {
         ArrayList<String> imagePaths = new ArrayList<>();
 
         for (MultipartFile file : files) {
@@ -97,7 +101,7 @@ public class ProductController {
 
             if (file == null || file.isEmpty()) continue;
 
-            String url = s3Service.uploadFile(file);
+            String url = s3Service.uploadFile(file,brandId);
             imagePaths.add(url);
 
         }
