@@ -1,6 +1,7 @@
 package com.cart.controller;
 
 import com.cart.dto.AddToCartRequest;
+import com.cart.dto.ApiResponse;
 import com.cart.entity.Cart;
 import com.cart.service.CartService;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +21,7 @@ public class CartController {
 
      // http://localhost:8082/api/v1/cart/add
     @PostMapping("/add")
-    public ResponseEntity<String> addToCart(
+    public ResponseEntity<ApiResponse<Cart>> addToCart(
             @RequestHeader(value = "X-CART-ID", required = false) String uuid,
             @RequestBody AddToCartRequest request
     ) {
@@ -29,9 +30,17 @@ public class CartController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-CART-ID", cart.getUuid());
 
+        ApiResponse<Cart> response = new ApiResponse<>(
+                "Product added successfuly",
+                200,
+                cart
+
+
+        );
+
         return ResponseEntity.ok()
                 .headers(headers)
-                .body("Product add  to the cart");
+                .body(response);
 
     }
 }
