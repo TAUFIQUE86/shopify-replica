@@ -2,11 +2,16 @@ package com.cart.controller;
 
 import com.cart.dto.AddToCartRequest;
 import com.cart.dto.ApiResponse;
+import com.cart.dto.OrderDto;
 import com.cart.entity.Cart;
 import com.cart.service.CartService;
+import org.apache.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/cart")
@@ -43,4 +48,27 @@ public class CartController {
                 .body(response);
 
     }
+
+  @PostMapping("/checkout")
+    public ResponseEntity<ApiResponse<OrderDto>> checkout(
+          @RequestParam Long userId,
+          @RequestBody List<AddToCartRequest> cartitems
+          ){
+      OrderDto orderDto = cartService.cheakOut(userId, cartitems);
+      ApiResponse<OrderDto> response = new ApiResponse<>();
+      if (orderDto !=null){
+          response.setData(orderDto);
+          response.setMessage("Oder created successfully");
+          response.setStatus(HttpStatus.SC_OK);
+
+          return  new ResponseEntity<>(response, HttpStatusCode.valueOf(HttpStatus.SC_OK));
+
+      }
+      response.setData(orderDto);
+      response.setMessage("Oder not created here ");
+      response.setStatus(HttpStatus.SC_BAD_REQUEST);
+
+      return  new ResponseEntity<>(response, HttpStatusCode.valueOf(HttpStatus.SC_BAD_REQUEST));
+
+  }
 }

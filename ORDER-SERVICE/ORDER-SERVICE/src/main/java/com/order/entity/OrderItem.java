@@ -1,4 +1,4 @@
-package com.cart.entity;
+package com.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -10,24 +10,25 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "cart_item")
+@Table(name = "order_item")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartItem {
+public class OrderItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    private Long id;
 
-    private  Long productId;
-    private  Long brandId;
-    private  Integer quantity;
+    private Long productId;
+    private Long brandId;
+    private Integer quantity;
     private BigDecimal price;
 
-  @JsonBackReference
+   @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @JoinColumn(name = "order_id")
+    private Order order;
 
 }
